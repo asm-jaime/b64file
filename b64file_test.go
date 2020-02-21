@@ -72,3 +72,30 @@ func TestB64ToFile(t *testing.T) {
 		})
 	}
 }
+
+func TestFileToB64(t *testing.T) {
+	tests := []struct {
+		name string
+		path string
+		want error
+	}{
+		{"file correct data",
+			"./data.correct.jpeg",
+			nil,
+		},
+		{"file incorrect format in b64 prefix",
+			"./data.incorrect_prefix_format.jpeg",
+			nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_, got := FileToB64(tt.path)
+
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("B64ToFile = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

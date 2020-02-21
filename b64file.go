@@ -10,14 +10,17 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 	"io/ioutil"
+	"path/filepath"
+	//"log"
 	"os"
 	"strings"
 )
 
 const (
-	invalidImage      = "invalid image"
-	unsupportedFormat = "does not supported format"
-	defaultFileMode   = 0644
+	invalidImage       = "invalid image"
+	unsupportedFormat  = "does not supported format"
+	errExtDoesNotExist = "extension does not exist"
+	defaultFileMode    = 0644
 )
 
 // B64ToFile save a base64 picture as the file
@@ -53,10 +56,15 @@ func B64ToFile(fileName, data string) error {
 }
 
 // FileToB64 get the base64 string from an image file
-func FileToB64(file string) (imgB64 string, err error) {
+func FileToB64(file string) (data string, err error) {
+	extension := filepath.Ext(file)
+	if extension == "" {
+		return "", errors.New(errExtDoesNotExist)
+	}
+
 	img, err := os.Open(file)
 	if err != nil {
-		return imgB64, err
+		return data, err
 	}
 	defer img.Close()
 
@@ -66,5 +74,6 @@ func FileToB64(file string) (imgB64 string, err error) {
 
 	reader := bufio.NewReader(img)
 	reader.Read(buf)
-	return base64.StdEncoding.EncodeToString(buf), err
+	return "data:image/" + extension + ";base64," +
+		base64.StdEncoding.EncodeToString(buf), err
 }
