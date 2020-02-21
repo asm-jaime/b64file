@@ -1,4 +1,4 @@
-package main
+package b64file
 
 import (
 	"bufio"
