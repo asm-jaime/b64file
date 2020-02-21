@@ -74,6 +74,6 @@ func FileToB64(file string) (data string, err error) {
 
 	reader := bufio.NewReader(img)
 	reader.Read(buf)
-	return "data:image/" + extension + ";base64," +
+	return "data:image/" + extension[1:] + ";base64," +
 		base64.StdEncoding.EncodeToString(buf), err
 }
